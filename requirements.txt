@@ -4,3 +4,4 @@ mysql-connector
 simplejson
 Flask-SQLAlchemy
 wtforms
+flask_wtf
