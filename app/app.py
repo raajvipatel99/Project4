@@ -5,12 +5,12 @@ from flask import render_template
 # from flaskext.mysql import MySQL
 # from pymysql.cursors import DictCursor
 from flask_sqlalchemy import SQLAlchemy
-from wtforms import StringField, RadioField #etcetera
+from wtforms import StringField
+from flask_wtf import FlaskForm
 
 
 app = Flask(__name__)
 # mysql = MySQL(cursorclass=DictCursor)
-
 
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:/biostatData.db'
@@ -29,7 +29,12 @@ class User(db.Model):
     def __repr__(self):
         return '<Name %r>' % self.name
 
-
+class UserForm(FlaskForm):
+    name = StringField("Name: ")
+    sex = StringField("Sex: ")
+    age = StringField("Age: ")
+    height_in = StringField("Height (inches): ")
+    weight_lbs = StringField("Weight (lbs): ")
 
 
 @app.route('/', methods=['GET'])
