@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block content %}
+<form action="/biostat/new" method="POST">
+    <div class="row">
+        <div class="col">
+            <label for="names">Name</label>
+            <input id="names" type="text" class="form-control" placeholder="Name" name="names">
+        </div>
+        <div class="col">
+            <label for="sex">Sex</label>
+            <input id="sex" type="text" class="form-control" placeholder="Sex"
+                   name="sex">
+        </div>
+        <div class="col">
+            <label for="age">Age</label>
+            <input id="age" type="text" class="form-control" placeholder="Age" name="age">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <label for="height_in">Height (inches)(</label>
+            <input id="height_in" type="text" class="form-control" placeholder="Height" name="height_in">
+        </div>
+        <div class="col">
+            <label for="weight_in">Weight (lbs)</label>
+            <input id="weight_in" type="text" class="form-control" placeholder="Weight" name="weight_in">
+        </div>
+    </div>
+    <button type="submit" class="btn btn-success">Create</button>
+
+</form>
+
+{% endblock %}
