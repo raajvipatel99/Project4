@@ -11,13 +11,13 @@
     </tr>
     </thead>
     <tbody>
-    {% for biostat in biostat %}
+    {% for val in biostat %}
     <tr>
-        <td><a href="view/{{biostat.id}}">{{ biostat.names }}</a></td>
-        <td>{{ biostat.sex }}</td>
-        <td>{{ biostat.age }}</td>
-        <td>{{ biostat.height_in }}</td>
-        <td>{{ biostat.weight_lbs }}</td>
+        <td><a href="view/{{val.id}}">{{ val.names }}</a></td>
+        <td>{{ val.sex }}</td>
+        <td>{{ val.age }}</td>
+        <td>{{ val.height_in }}</td>
+        <td>{{ val.weight_lbs }}</td>
     </tr>
     {% endfor %}
     </tbody>
