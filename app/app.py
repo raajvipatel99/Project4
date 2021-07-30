@@ -2,18 +2,34 @@ from typing import List, Dict
 import simplejson as json
 from flask import Flask, request, Response, redirect
 from flask import render_template
-from flaskext.mysql import MySQL
-from pymysql.cursors import DictCursor
+# from flaskext.mysql import MySQL
+# from pymysql.cursors import DictCursor
+from flask_sqlalchemy import SQLAlchemy
+from wtforms import StringField, RadioField #etcetera
+
 
 app = Flask(__name__)
-mysql = MySQL(cursorclass=DictCursor)
+# mysql = MySQL(cursorclass=DictCursor)
 
-app.config['MYSQL_DATABASE_HOST'] = 'db'
-app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'root'
-app.config['MYSQL_DATABASE_PORT'] = 3306
-app.config['MYSQL_DATABASE_DB'] = 'biostatData'
-mysql.init_app(app)
+
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:/biostatData.db'
+app.config['SECRET_KEY'] = 'key'
+db = SQLAlchemy(app)
+
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    names = db.Column(db.String(20), unique=False, nullable=False)
+    sex = db.Column(db.String(5), unique=False, nullable=False)
+    age = db.Column(db.Integer, unique=False, nullable=False)
+    height_in = db.Column(db.Integer, unique=False, nullable=False)
+    weight_lbs = db.Column(db.Integer, unique=False, nullable=False)
+
+    def __repr__(self):
+        return '<Name %r>' % self.name
+
+
 
 
 @app.route('/', methods=['GET'])
