@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block content %}
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Age</th>
+        <th scope="col">Sex</th>
+        <th scope="col">Height (inches)</th>
+        <th scope="col">Weight (lbs)</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for biostat in biostat %}
+    <tr>
+        <td><a href="view/{{biostat.id}}">{{ biostat.names }}</a></td>
+        <td>{{ biostat.sex }}</td>
+        <td>{{ biostat.age }}</td>
+        <td>{{ biostat.height_in }}</td>
+        <td>{{ biostat.weight_lbs }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
