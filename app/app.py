@@ -14,8 +14,10 @@ app = Flask(__name__,
             template_folder='../templates')
 
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///biostatData.db'
+
 app.config['SECRET_KEY'] = 'key'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///biostatData.db'
+
 db = SQLAlchemy(app)
 
 
