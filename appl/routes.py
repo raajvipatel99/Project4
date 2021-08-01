@@ -1,71 +1,41 @@
-from typing import List, Dict
-
-import redis
-import simplejson as json
-from flask import Flask, request, Response, redirect, jsonify, session, render_template_string, url_for
-from flask import render_template
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import Session
-from wtforms import StringField, SubmitField
-from flask_wtf import FlaskForm
-
-
-app = Flask(__name__,
-            template_folder='../templates')
+from flask import Blueprint, request, session, redirect, url_for, render_template_string, render_template, Response, \
+    jsonify
 
 
 
-app.config['SECRET_KEY'] = 'key'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///biostatData.db'
-
-db = SQLAlchemy(app)
+routes_in_routes = Blueprint('routes_in_routes',__name__)
 
 
-class Biostat(db.Model):
-    __tablename__ = 'biostat'
-    id = db.Column(db.Integer, primary_key=True)
-    names = db.Column(db.String(20), unique=False, nullable=False)
-    sex = db.Column(db.String(3), unique=False, nullable=False)
-    age = db.Column(db.Integer, unique=False, nullable=False)
-    height_in = db.Column(db.Integer, unique=False, nullable=False)
-    weight_lbs = db.Column(db.Integer, unique=False, nullable=False)
-
-    def __repr__(self):
-        return '<Name %r>' % self.names
-
-
-
-class BiostatForm(FlaskForm):
-    names = StringField("Name: ")
-    sex = StringField("Sex: ")
-    age = StringField("Age: ")
-    height_in = StringField("Height (inches): ")
-    weight_lbs = StringField("Weight (lbs): ")
-    submit = SubmitField("Submit")
-
-
-@app.route('/', methods=['GET'])
+@routes_in_routes.route('/', methods=['GET'])
 def index():
+    from appl.app import db, BiostatForm
+    from appl.models import Biostat
     user = {'username': 'Biostat Project'}
     biostat = Biostat.query.order_by(Biostat.id)
     return render_template('index.html', title='Home', user=user, biostat=biostat)
 
 
-@app.route('/view/<int:biostat_id>', methods=['GET'])
+@routes_in_routes.route('/view/<int:biostat_id>', methods=['GET'])
 def record_view(biostat_id):
+    from appl.app import db, BiostatForm
+    from appl.models import Biostat
     # print(db.session.query().filter_by(id=address_id).first())
     print(Biostat.query.get(biostat_id).names)
     return render_template('view.html', title='View Form', biostat=Biostat.query.get(biostat_id))
 
 
-@app.route('/edit/<int:biostat_id>', methods=['GET'])
+@routes_in_routes.route('/edit/<int:biostat_id>', methods=['GET'])
 def form_edit_get(biostat_id):
+    from appl.app import db, BiostatForm
+    from appl.models import Biostat
     biostat = Biostat.query.filter_by(id=biostat_id).one()
     return render_template('edit.html', title='Edit Form', biostat=biostat)
 
 
-@app.route('/edit/<int:biostat_id>', methods=['POST'])
+@routes_in_routes.route('/edit/<int:biostat_id>', methods=['POST'])
 def form_update_post(biostat_id):
+    from appl.app import db, BiostatForm
+    from appl.models import Biostat
     biostat = Biostat.query.filter_by(id=biostat_id).one()
     biostat.names = request.form.get('names')
     biostat.sex = request.form.get('sex')
@@ -77,8 +47,10 @@ def form_update_post(biostat_id):
     return redirect("/", code=302)
 
 
-@app.route('/biostat/new', methods=['POST'])
+@routes_in_routes.route('/biostat/new', methods=['POST'])
 def form_insert_get():
+    from appl.app import db, BiostatForm
+    from appl.models import Biostat
     form = BiostatForm()
     biostat = Biostat(names=form.names.data, sex=form.sex.data, age=form.age.data,
                       height_in=form.height_in.data, weight_lbs=form.weight_lbs.data)
@@ -96,16 +68,20 @@ def form_insert_get():
     return render_template('new.html', title='New Biostat Form', form=form, names=names, biostat=biostat)
 
 
-@app.route('/biostat/new', methods=['GET'])
+@routes_in_routes.route('/biostat/new', methods=['GET'])
 def form_insert_post():
+    from appl.app import db, BiostatForm
+    from appl.models import Biostat
     form = BiostatForm()
     biostat = Biostat.query.order_by(Biostat.id)
     return render_template('new.html', title='New Biostat Form', form=form, biostat=biostat)
     return redirect("/", code=302)
 
 
-@app.route('/delete/<int:biostat_id>', methods=['POST'])
+@routes_in_routes.route('/delete/<int:biostat_id>', methods=['POST'])
 def form_delete_post(biostat_id):
+    from appl.app import db, BiostatForm
+    from appl.models import Biostat
     biostat = Biostat.query.filter_by(id=biostat_id).one()
     print(biostat.age)
     db.session.delete(biostat)
@@ -113,8 +89,10 @@ def form_delete_post(biostat_id):
     return redirect("/", code=302)
 
 
-@app.route('/api/v1/biostat', methods=['GET'])
+@routes_in_routes.route('/api/v1/biostat', methods=['GET'])
 def api_browse() -> str:
+    from appl.app import db, BiostatForm
+    from appl.models import Biostat
     resp = Biostat.query.all()
     json_res = []
     for temp in resp:
@@ -122,14 +100,18 @@ def api_browse() -> str:
     return jsonify(json_res)
 
 
-@app.route('/api/v1/biostat/<int:biostat_id>', methods=['GET'])
+@routes_in_routes.route('/api/v1/biostat/<int:biostat_id>', methods=['GET'])
 def api_retrieve(biostat_id) -> str:
+    from appl.app import db, BiostatForm
+    from appl.models import Biostat
     resp = Biostat.query.filter_by(id=biostat_id).one()
     return jsonify(resp.toDict())
 
 
-@app.route('/api/v1/biostat', methods=['POST'])
+@routes_in_routes.route('/api/v1/biostat', methods=['POST'])
 def api_add() -> str:
+    from appl.app import db, BiostatForm
+    from appl.models import Biostat
     content = request.json
     biostat = Biostat(names=content['names'], sex=content['sex'], age=content['age'],
                  height_in=content['height_in'], weight_lbs=content['weight_lbs'])
@@ -137,8 +119,10 @@ def api_add() -> str:
     return resp
 
 
-@app.route('/api/v1/biostat/<int:biostat_id>', methods=['PUT'])
+@routes_in_routes.route('/api/v1/biostat/<int:biostat_id>', methods=['PUT'])
 def api_edit(biostat_id) -> str:
+    from appl.app import db, BiostatForm
+    from appl.models import Biostat
     content = request.json
     biostat = Biostat.query.filter_by(id=biostat_id).one()
     biostat.names = content['names']
@@ -151,25 +135,18 @@ def api_edit(biostat_id) -> str:
     #here,change content
 
 
-@app.route('/api/v1/biostat/<int:biostat_id>', methods=['DELETE'])
+@routes_in_routes.route('/api/v1/biostat/<int:biostat_id>', methods=['DELETE'])
 def api_delete(biostat_id) -> str:
+    from appl.app import db, BiostatForm
+    from appl.models import Biostat
     biostat = Biostat.query.filter_by(id=biostat_id).one()
     # resp = Response(status=200, mimetype='application/json')
     # return resp
     return biostat
 
-db.create_all();
-
-app.config['SESSION_TYPE'] = 'redis'
-app.config['SESSION_PERMANENT'] = False
-app.config['SESSION_USE_SIGNER'] = True
-app.config['SESSION_REDIS'] = redis.from_url('redis://localhost:6379')
-
-# Create and initialize the Flask-Session object AFTER `app` has been configured
-server_session = Session(app)
 
 
-@app.route('/set_email', methods=['GET', 'POST'])
+@routes_in_routes.route('/set_email', methods=['GET', 'POST'])
 def set_email():
     if request.method == 'POST':
         # Save the form data to the session object
@@ -185,7 +162,7 @@ def set_email():
         """
 
 
-@app.route('/get_email')
+@routes_in_routes.route('/get_email')
 def get_email():
     return render_template_string("""
             {% if session['email'] %}
@@ -196,14 +173,8 @@ def get_email():
         """)
 
 
-@app.route('/delete_email')
+@routes_in_routes.route('/delete_email')
 def delete_email():
     # Clear the email stored in the session object
     session.pop('email', default=None)
     return '<h1>Session deleted!</h1>'
-
-
-
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
