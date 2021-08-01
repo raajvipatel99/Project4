@@ -12,7 +12,14 @@ from routes import routes_in_routes, set_email
 
 
 
+app = Flask(__name__,
+            template_folder='../templates')
 
+app.register_blueprint(routes_in_routes)
+app.config['SECRET_KEY'] = 'key'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///biostatData.db'
+
+db = SQLAlchemy(app)
 
 # def setUp(self):
 db.create_all();
