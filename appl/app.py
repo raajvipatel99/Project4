@@ -20,15 +20,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///biostatData.db'
 db = SQLAlchemy(app)
 
 
-class BiostatForm(FlaskForm):
-    names = StringField("Name: ")
-    sex = StringField("Sex: ")
-    age = StringField("Age: ")
-    height_in = StringField("Height (inches): ")
-    weight_lbs = StringField("Weight (lbs): ")
-    submit = SubmitField("Submit")
 
-
+# def setUp(self):
 db.create_all();
 
 app.config['SESSION_TYPE'] = 'redis'
@@ -38,6 +31,11 @@ app.config['SESSION_REDIS'] = redis.from_url('redis://localhost:6379')
 
 # Create and initialize the Flask-Session object AFTER `appl` has been configured
 server_session = Session(app)
+
+
+# def tearDown(self):
+#     db.session.remove()
+#     db.drop_all()
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
