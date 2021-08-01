@@ -8,7 +8,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import Session
 from wtforms import StringField, SubmitField
 from flask_wtf import FlaskForm
-from routes import routes_in_routes
+from routes import routes_in_routes, set_email
 
 app = Flask(__name__,
             template_folder='../templates')

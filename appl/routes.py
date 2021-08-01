@@ -1,13 +1,21 @@
+from functools import wraps
+
 from flask import Blueprint, request, session, redirect, url_for, render_template_string, render_template, Response, \
     jsonify
 
 routes_in_routes = Blueprint('routes_in_routes', __name__)
 
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if session.get('email') is None:
+            return redirect(url_for('routes_in_routes.get_email'),code=302)
+        return f(*args, **kwargs)
+    return decorated_function
 
 @routes_in_routes.route('/', methods=['GET'])
+@login_required
 def index():
-    from appl.app import db
-    from appl.forms import BiostatForm
     from appl.models import Biostat
     user = {'username': 'Biostat Project'}
     biostat = Biostat.query.order_by(Biostat.id)
@@ -15,6 +23,7 @@ def index():
 
 
 @routes_in_routes.route('/view/<int:biostat_id>', methods=['GET'])
+@login_required
 def record_view(biostat_id):
     from appl.app import db
     from appl.forms import BiostatForm
@@ -25,6 +34,7 @@ def record_view(biostat_id):
 
 
 @routes_in_routes.route('/edit/<int:biostat_id>', methods=['GET'])
+@login_required
 def form_edit_get(biostat_id):
     from appl.models import Biostat
     biostat = Biostat.query.filter_by(id=biostat_id).one()
@@ -32,6 +42,7 @@ def form_edit_get(biostat_id):
 
 
 @routes_in_routes.route('/edit/<int:biostat_id>', methods=['POST'])
+@login_required
 def form_update_post(biostat_id):
     from app import db
     from appl.models import Biostat
@@ -48,6 +59,7 @@ def form_update_post(biostat_id):
 
 
 @routes_in_routes.route('/biostat/new', methods=['POST'])
+@login_required
 def form_insert_get():
     from appl.app import db
     from appl.forms import BiostatForm
@@ -70,6 +82,7 @@ def form_insert_get():
 
 
 @routes_in_routes.route('/biostat/new', methods=['GET'])
+@login_required
 def form_insert_post():
     from appl.app import db
     from appl.forms import BiostatForm
@@ -81,6 +94,7 @@ def form_insert_post():
 
 
 @routes_in_routes.route('/delete/<int:biostat_id>', methods=['POST'])
+@login_required
 def form_delete_post(biostat_id):
     from app import db
     from appl.models import Biostat
@@ -92,6 +106,7 @@ def form_delete_post(biostat_id):
 
 
 @routes_in_routes.route('/api/v1/biostat', methods=['GET'])
+@login_required
 def api_browse() -> str:
     from appl.app import db
     from appl.forms import BiostatForm
@@ -104,6 +119,7 @@ def api_browse() -> str:
 
 
 @routes_in_routes.route('/api/v1/biostat/<int:biostat_id>', methods=['GET'])
+@login_required
 def api_retrieve(biostat_id) -> str:
     from appl.app import db
     from appl.forms import BiostatForm
@@ -113,6 +129,7 @@ def api_retrieve(biostat_id) -> str:
 
 
 @routes_in_routes.route('/api/v1/biostat', methods=['POST'])
+@login_required
 def api_add() -> str:
     from appl.app import db
     from appl.forms import BiostatForm
@@ -125,6 +142,7 @@ def api_add() -> str:
 
 
 @routes_in_routes.route('/api/v1/biostat/<int:biostat_id>', methods=['PUT'])
+@login_required
 def api_edit(biostat_id) -> str:
     from appl.app import db
     from appl.forms import BiostatForm
@@ -142,6 +160,7 @@ def api_edit(biostat_id) -> str:
 
 
 @routes_in_routes.route('/api/v1/biostat/<int:biostat_id>', methods=['DELETE'])
+@login_required
 def api_delete(biostat_id) -> str:
     from appl.app import db
     from appl.forms import BiostatForm
@@ -157,7 +176,7 @@ def set_email():
     if request.method == 'POST':
         # Save the form data to the session object
         session['email'] = request.form['email_address']
-        return redirect(url_for('get_email'))
+        return redirect(url_for('routes_in_routes.get_email'))
 
     return """
         <form method="post">
@@ -174,7 +193,7 @@ def get_email():
             {% if session['email'] %}
                 <h1>Welcome {{ session['email'] }}!</h1>
             {% else %}
-                <h1>Welcome! Please enter your email <a href="{{ url_for('set_email') }}">here.</a></h1>
+                <h1>Welcome! Please enter your email <a href="{{ url_for('routes_in_routes.set_email') }}">here.</a></h1>
             {% endif %}
         """)
 
