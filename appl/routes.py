@@ -226,6 +226,7 @@ def set_email():
 
     return """
         <form method="post">
+        <h1>Login Page</h1>
             <label for="email">Username:</label>
             <input type="username" id="username" name="username" required />
              <label for="password">Password:</label>
