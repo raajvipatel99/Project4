@@ -7,7 +7,7 @@ services:
       - "5000:5000"
     volumes:
       - ../:/app
-      - ./db/:/my/sqlite/path/ # Here is the change
+      - ./db/:/my/sqlite/path/
   sqlite3:
     image: nouchka/sqlite3:latest
     stdin_open: true
