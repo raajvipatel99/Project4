@@ -1,8 +1,21 @@
 # Project Description
+Flask, Redis, SQLAlchemy
+
+# How to run
+* Using Docker
+  Note: Docker file is in appl folder
+  1. Clone this repository
+  2. Open using Pycharm
+  3. Add Docker Configuration using 'Edit Configuration'
+  4. Set File Path to Dockerfile
+  5. Add Interpreter
+  6. Run the Project
+ * Can also run by running 'pseudo_Dockerfile.sh' command on terminal and setting up appl file from edit configuration
+
 Project 4
 
-Projecr Run 1
-![](https://user-images.githubusercontent.com/77593586/127952725-e68742e2-1471-4bed-a66a-ed8e774b0c96.mov)
+Project Run 1
+https://user-images.githubusercontent.com/77593586/127952725-e68742e2-1471-4bed-a66a-ed8e774b0c96.mov
 
 Project Run 2
 https://user-images.githubusercontent.com/77593586/127952782-7776d562-58e1-42c5-809c-e698619baf21.mov
