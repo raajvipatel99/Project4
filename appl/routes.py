@@ -212,10 +212,12 @@ def set_email():
             else:
                 return render_template_string("""
                     Invalid Password. Please try again!
+                    <h3><a href="{{ url_for('routes_in_routes.get_email') }}">Back</a></h3>
                 """)
         else:
             return render_template_string("""
                                 Username not found!
+                                 <h3><a href="{{ url_for('routes_in_routes.get_email') }}">Back</a></h3>
                             """)
 
 
