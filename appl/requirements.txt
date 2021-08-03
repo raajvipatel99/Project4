@@ -5,3 +5,4 @@ simplejson
 Flask-SQLAlchemy
 wtforms
 flask_wtf
+redis
