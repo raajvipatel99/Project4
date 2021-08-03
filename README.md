@@ -10,7 +10,7 @@ Flask, Redis, SQLAlchemy
   4. Set File Path to Dockerfile
   5. Add Interpreter
   6. Run the Project
- * Can also run by running 'pseudo_Dockerfile.sh' command on terminal and setting up appl file from edit configuration
+ * Can also run by running 'pseudo_Dockerfile.sh' command on terminal and setting up path for app.py file from edit configuration
 
 Project 4
 
